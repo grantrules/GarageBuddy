@@ -9,6 +9,12 @@ services:
       POSTGRES_USER: carmaint
       POSTGRES_PASSWORD: example
 
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 3000:8080
+
   redis:
     image: redis
     volumes:
