@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"errors"
 	"log"
 	"net/http"
@@ -27,51 +28,23 @@ type Register struct {
 	PasswordConfirm string `json:"password-confirm" xml:"password-confirm" form:"password-confirm" query:"password-confirm"`
 }
 
-type User struct {
-	ID       string
-	Name     string
-	Email    string
-	Password string
-}
-
-func createUser(u User) (int64, error) {
-	result, err := db.Exec("INSERT user VALUES (null, ?, ?, ?)", u.Name, u.Email, u.Password)
-	if err != nil {
-		log.Print(err)
-		return -1, err
-	}
-	id, err := result.LastInsertId()
-	if err != nil {
-		log.Print(err)
-	}
-	return id, err
-}
-
-func getUserByEmail(email string) (User, error) {
-	var u User
-	row := db.QueryRow("SELECT * FROM user WHERE Email = ?", email)
-	if err := row.Scan(&u.ID, &u.Name, &u.Email, &u.Password); err != nil {
-		return u, errors.New("unable to find user by email")
-	}
-	return u, nil
-
-}
-
-func hashPassword(password string) (string, error) {
+func HashPassword(password string) (string, error) {
 	salt := []byte("poopoo peepee")
 
 	hashedPass, err := scrypt.Key([]byte(password), salt, 32768, 8, 1, 32)
 
-	return string(hashedPass[:]), err
+	encodedStr := base64.StdEncoding.EncodeToString(hashedPass)
+
+	return encodedStr, err
 }
 
-func loginUser(l Login) (User, error) {
-	u, err := getUserByEmail(l.Email)
+func loginUser(cc *CustomContext, l Login) (User, error) {
+	u, err := getUserByEmail(cc.db, l.Email)
 	if err != nil {
 		return u, errors.New("login failed")
 	}
 
-	hashedPassword, err := hashPassword(l.Password)
+	hashedPassword, err := HashPassword(l.Password)
 	if err != nil {
 		return u, errors.New("login failed")
 	}
@@ -84,7 +57,7 @@ func loginUser(l Login) (User, error) {
 
 }
 
-func registerUser(r Register) (int64, error) {
+func registerUser(cc *CustomContext, r Register) (int64, error) {
 	if r.Name == "" {
 		return -1, errors.New("name cannot be empty")
 	}
@@ -95,7 +68,7 @@ func registerUser(r Register) (int64, error) {
 		return -1, errors.New("passwords don't match")
 
 	}
-	hashedPass, err := hashPassword(r.Password)
+	hashedPass, err := HashPassword(r.Password)
 	if err != nil {
 		return -1, errors.New("error")
 	}
@@ -105,7 +78,7 @@ func registerUser(r Register) (int64, error) {
 	u.Email = r.Email
 	u.Password = hashedPass
 
-	return createUser(*u)
+	return createUser(cc.db, *u)
 }
 
 func hello(c echo.Context) error {
@@ -113,11 +86,12 @@ func hello(c echo.Context) error {
 }
 
 func login(c echo.Context) error {
+	cc := c.(*CustomContext)
 	var l Login
 	if err := c.Bind(l); err != nil {
 		return err
 	}
-	u, err := loginUser(l)
+	u, err := loginUser(cc, l)
 	if err != nil {
 		return c.JSON(http.StatusForbidden, "Login failed")
 	}
@@ -130,11 +104,12 @@ func logout(c echo.Context) error {
 }
 
 func register(c echo.Context) error {
+	cc := c.(*CustomContext)
 	r := new(Register)
 	if err := c.Bind(r); err != nil {
 		return err
 	}
-	userId, err := registerUser(*r)
+	userId, err := registerUser(cc, *r)
 	if err != nil {
 		log.Print(err)
 
@@ -148,6 +123,11 @@ func resetPass(c echo.Context) error {
 	return c.String(http.StatusOK, "Reset pass")
 }
 
+type CustomContext struct {
+	echo.Context
+	db *sql.DB
+}
+
 func main() {
 	connStr := "postgres://carmaint:example@postgres/carmaint"
 	db, err := sql.Open("pgx", connStr)
@@ -158,7 +138,12 @@ func main() {
 	db.Query("SELECT 1")
 
 	e := echo.New()
-
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			cc := &CustomContext{c, db}
+			return next(cc)
+		}
+	})
 	e.Use(middleware.Logger())
 
 	// Routes
