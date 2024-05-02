@@ -4,7 +4,7 @@ services:
     restart: always
     shm_size: 128mb
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+      - ../_data/postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: carmaint
       POSTGRES_PASSWORD: example
@@ -18,7 +18,7 @@ services:
   redis:
     image: redis
     volumes:
-      - ./data/redis:/data
+      - ../_data/redis:/data
 
   server:
     build:
@@ -39,6 +39,6 @@ services:
       dockerfile: ../build/pkg/web.Dockerfile
     restart: unless-stopped
     volumes:
-     - ./web/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+     - ../web/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
       - 8081:80
