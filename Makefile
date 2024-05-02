@@ -20,4 +20,4 @@ build: clean vet
 docker:
 	docker compose -f deployments/docker-compose.yml down
 	docker compose -f deployments/docker-compose.yml build
-	docker compose -f deployments/docker-compose.yml up
+	docker compose -f deployments/docker-compose.yml up --watch

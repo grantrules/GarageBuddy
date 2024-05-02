@@ -1,4 +1,4 @@
-FROM golang:alpine
+FROM golang:alpine as build-stage
 
 ENV port=8080
 
@@ -13,7 +13,10 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux make
 
+FROM alpine
 
-CMD ["./output/garagebuddy"]
+COPY --from=build-stage /app/output /app
+
+CMD ["/app/garagebuddy"]
 
 EXPOSE ${port}
