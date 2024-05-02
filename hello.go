@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/sessions"
+	"github.com/grantrules/garagebuddy/internal"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
@@ -28,8 +29,8 @@ func HashPassword(password string) (string, error) {
 	return encodedStr, err
 }
 
-func loginUser(cc *CustomContext, l LoginForm) (User, error) {
-	u, err := getUserByEmail(cc.db, l.Email)
+func loginUser(cc *CustomContext, l internal.LoginForm) (internal.User, error) {
+	u, err := internal.GetUserByEmail(cc.db, l.Email)
 	if err != nil {
 		return u, errors.New("login failed 0 couldn't find user")
 	}
@@ -47,7 +48,7 @@ func loginUser(cc *CustomContext, l LoginForm) (User, error) {
 
 }
 
-func registerUser(cc *CustomContext, r RegisterForm) (int64, error) {
+func registerUser(cc *CustomContext, r internal.RegisterForm) (int64, error) {
 	if r.Name == "" {
 		return -1, errors.New("name cannot be empty")
 	}
@@ -63,12 +64,12 @@ func registerUser(cc *CustomContext, r RegisterForm) (int64, error) {
 		return -1, errors.New("error")
 	}
 
-	u := new(User)
+	u := new(internal.User)
 	u.Name = r.Name
 	u.Email = r.Email
 	u.Password = hashedPass
 
-	return createUser(cc.db, *u)
+	return internal.CreateUser(cc.db, *u)
 }
 
 func hello(c echo.Context) error {
@@ -85,7 +86,7 @@ func test(c echo.Context) error {
 
 func login(c echo.Context) error {
 	cc := c.(*CustomContext)
-	l := new(LoginForm)
+	l := new(internal.LoginForm)
 	if err := c.Bind(l); err != nil {
 		return err
 	}
@@ -119,7 +120,7 @@ func logout(c echo.Context) error {
 
 func register(c echo.Context) error {
 	cc := c.(*CustomContext)
-	r := new(RegisterForm)
+	r := new(internal.RegisterForm)
 	if err := c.Bind(r); err != nil {
 		return err
 	}

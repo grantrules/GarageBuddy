@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"database/sql"
@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func createUser(db *sql.DB, u User) (int64, error) {
+func CreateUser(db *sql.DB, u User) (int64, error) {
 	result, err := db.Exec("INSERT INTO Users (Name, Email, Password) VALUES ($1, $2, $3)", u.Name, u.Email, u.Password)
 	if err != nil {
 		log.Print(err)
@@ -19,7 +19,7 @@ func createUser(db *sql.DB, u User) (int64, error) {
 	return id, err
 }
 
-func getUserByEmail(db *sql.DB, email string) (User, error) {
+func GetUserByEmail(db *sql.DB, email string) (User, error) {
 	var u User
 	row := db.QueryRow("SELECT * FROM users WHERE Email = $1", email)
 	if err := row.Scan(&u.ID, &u.Name, &u.Email, &u.Password); err != nil {
