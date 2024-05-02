@@ -14,6 +14,6 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux make
 
 
-CMD ["./garagebuddy"]
+CMD ["./output/garagebuddy"]
 
 EXPOSE ${port}
