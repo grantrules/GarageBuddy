@@ -17,6 +17,4 @@ FROM alpine
 
 COPY --from=build-stage /app/output /app
 
-CMD ["/app/garagebuddy"]
-
 EXPOSE ${port}
