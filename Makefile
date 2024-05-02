@@ -2,10 +2,10 @@
 .PHONY:fmt vet build clean
 
 clean:
-	rm -rf hello
+	rm -rf output
 fmt:
 	go fmt ./...
 vet: fmt
 	go vet ./...
 build: clean vet
-	go build
+	go build -o output/ ./...
