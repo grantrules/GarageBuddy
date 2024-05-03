@@ -10,8 +10,8 @@ import (
 func main() {
 	log.Print("importing cars")
 
-	_, err := git.PlainClone("/tmp/foo", false, &git.CloneOptions{
-		URL:      "https://github.com/go-git/go-git",
+	_, err := git.PlainClone("/tmp/cars", false, &git.CloneOptions{
+		URL:      "https://github.com/abhionlyone/us-car-models-data",
 		Progress: os.Stdout,
 	})
 
