@@ -47,7 +47,7 @@ func registerUser(cc *CustomContext, r internal.RegisterForm) (int64, error) {
 		return -1, errors.New("passwords don't match")
 
 	}
-	hashedPass, err := HashPassword(r.Password)
+	hashedPass, err := utils.HashPassword(r.Password)
 	if err != nil {
 		return -1, errors.New("error")
 	}

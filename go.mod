@@ -7,6 +7,7 @@ toolchain go1.22.2
 require github.com/jackc/pgx/v5 v5.5.5
 
 require (
+	github.com/go-git/go-git/v5 v5.12.0
 	github.com/gorilla/sessions v1.2.2
 	github.com/labstack/echo-contrib v0.17.1
 	gopkg.in/boj/redistore.v1 v1.0.0-20160128113310-fc113767cd6b
@@ -22,7 +23,6 @@ require (
 	github.com/garyburd/redigo v1.6.4 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.5.0 // indirect
-	github.com/go-git/go-git/v5 v5.12.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/gorilla/context v1.1.2 // indirect
