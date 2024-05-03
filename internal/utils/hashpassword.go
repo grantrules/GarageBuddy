@@ -7,7 +7,7 @@ import (
 )
 
 func HashPassword(password string) (string, error) {
-	salt := []byte("poopoo peepee")
+	salt := []byte("just some random string for now")
 
 	hashedPass, err := scrypt.Key([]byte(password), salt, 32768, 8, 1, 32)
 
