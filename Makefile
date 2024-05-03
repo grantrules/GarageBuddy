@@ -16,8 +16,8 @@ vet: fmt
 build: clean vet
 	go build -o output/ ./...
 
-.PHONY:docker
-docker:
+.PHONY:run
+run:
 	docker compose -f deployments/docker-compose.yml down
 	docker compose -f deployments/docker-compose.yml build
 	docker compose -f deployments/docker-compose.yml up --watch

@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"log"
@@ -11,31 +10,20 @@ import (
 
 	"github.com/gorilla/sessions"
 	"github.com/grantrules/garagebuddy/internal"
+	"github.com/grantrules/garagebuddy/internal/utils"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"golang.org/x/crypto/scrypt"
 	"gopkg.in/boj/redistore.v1"
 )
-
-func HashPassword(password string) (string, error) {
-	salt := []byte("poopoo peepee")
-
-	hashedPass, err := scrypt.Key([]byte(password), salt, 32768, 8, 1, 32)
-
-	encodedStr := base64.StdEncoding.EncodeToString(hashedPass)
-
-	return encodedStr, err
-}
 
 func loginUser(cc *CustomContext, l internal.LoginForm) (internal.User, error) {
 	u, err := internal.GetUserByEmail(cc.db, l.Email)
 	if err != nil {
 		return u, errors.New("login failed 0 couldn't find user")
 	}
-
-	hashedPassword, err := HashPassword(l.Password)
+	hashedPassword, err := utils.HashPassword(l.Password)
 	if err != nil {
 		return u, errors.New("login failed - password couldn't be hashed???")
 	}

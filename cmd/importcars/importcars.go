@@ -1,7 +1,22 @@
 package main
 
-import "log"
+import (
+	"log"
+	"os"
+
+	"github.com/go-git/go-git/v5"
+)
 
 func main() {
 	log.Print("importing cars")
+
+	_, err := git.PlainClone("/tmp/foo", false, &git.CloneOptions{
+		URL:      "https://github.com/go-git/go-git",
+		Progress: os.Stdout,
+	})
+
+	if err != nil {
+		log.Fatal("unable to clone cars repo")
+	}
+
 }
