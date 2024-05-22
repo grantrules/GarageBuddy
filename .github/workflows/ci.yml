@@ -28,7 +28,7 @@ jobs:
           context: .
           file: build/pkg/app.Dockerfile
           push: true
-          tags: grantrules/gb-backend
+          tags: grantrules/garagebuddy:backend
       -
         name: Build and push frontend
         uses: docker/build-push-action@v5
@@ -36,4 +36,4 @@ jobs:
           context: ./web
           file: build/pkg/web.Dockerfile
           push: true
-          tags: grantrules/gb-frontend
+          tags: grantrules/garagebuddy:frontend
