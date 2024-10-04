@@ -1,4 +1,4 @@
-FROM golang:alpine as build-stage
+FROM golang:alpine AS build-stage
 
 ENV port=8080
 
