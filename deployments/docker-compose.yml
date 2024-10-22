@@ -43,6 +43,8 @@ services:
     environment:
       - ENV=production
     restart: unless-stopped
+    env_file:
+      - ../.env
     ports:
       - 8080:8080
     command: /app/server
@@ -56,6 +58,8 @@ services:
       context: ../web
       dockerfile: ../build/pkg/web.Dockerfile
     restart: unless-stopped
+    env_file:
+      - ../.env
     volumes:
      - ../web/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     ports:

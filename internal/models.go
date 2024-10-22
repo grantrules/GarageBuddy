@@ -18,3 +18,7 @@ type RegisterForm struct {
 	Password        string `json:"password" xml:"password" form:"password" query:"password"`
 	PasswordConfirm string `json:"password-confirm" xml:"password-confirm" form:"password-confirm" query:"password-confirm"`
 }
+
+type ResetPassForm struct {
+	Email string `json:"email" xml:"email" form:"email" query:"email"`
+}

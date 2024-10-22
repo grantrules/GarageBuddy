@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"database/sql"
 	"log"
 
+	"github.com/grantrules/garagebuddy/internal/utils"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
@@ -11,14 +11,19 @@ import (
 	"gopkg.in/boj/redistore.v1"
 )
 
+// write a function that returns a new handler that handles CustomContext
+func CustomContextHandler(h func(*CustomContext) error) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		cc := c.(*CustomContext)
+		return h(cc)
+	}
+}
+
 func StartServer() {
-	connStr := "postgres://carmaint:example@postgres/carmaint"
-	db, err := sql.Open("pgx", connStr)
+	db, err := utils.ConnectDB()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	db.Query("SELECT 1")
 
 	store, err := redistore.NewRediStore(10, "tcp", "redis:6379", "", []byte("secret-key"))
 	if err != nil {
@@ -40,10 +45,13 @@ func StartServer() {
 	e.GET("/", Hello)
 	e.GET("/test", Test)
 
-	e.POST("/login", Login)
-	e.GET("/logout", Logout)
-	e.POST("/register", Register)
-	e.POST("/resetPass", ResetPass)
+	e.POST("/login", CustomContextHandler(Login))
+	e.GET("/logout", CustomContextHandler(Logout))
+	e.POST("/register", CustomContextHandler(Register))
+	e.POST("/resetPass", CustomContextHandler(ResetPass))
+
+	e.GET("/oauth2/login/google", CustomContextHandler(OauthGoogleLogin))
+	e.GET("/oauth2/callback/google", CustomContextHandler(OauthGoogleCallback))
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))

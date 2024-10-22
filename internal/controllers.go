@@ -48,3 +48,23 @@ func RegisterUser(cc *CustomContext, r RegisterForm) (int64, error) {
 
 	return CreateUser(cc.db, *u)
 }
+
+func ResetPassUser(cc *CustomContext, r ResetPassForm) error {
+	u, err := GetUserByEmail(cc.db, r.Email)
+	if err != nil {
+		return errors.New("couldn't find user by email")
+	}
+	resetKey := utils.RandomString(128)
+
+	// insert reset key into db table reset_password_tokens
+	_, err = cc.db.Exec("INSERT INTO reset_password_tokens (user_id, reset_key) VALUES ($1, $2)", u.ID, resetKey)
+
+	if err != nil {
+		return errors.New("failed to insert reset key into db")
+	}
+
+	// send email to user with reset key
+	err = utils.SendEmail(u.Email, "Password Reset", "Click here to reset your password: http://localhost:8081/reset/"+resetKey)
+
+	return err
+}
