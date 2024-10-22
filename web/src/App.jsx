@@ -3,15 +3,19 @@ import './App.css';
 import { StoreProvider } from './store/StoreContext';
 import { AuthProvider } from './auth/AuthProvider';
 
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Home from './pages/Home';
+
+const router = createBrowserRouter([{
+  path: "/",
+  element: <Home />,
+}]);
+
 function App() {
   return (
     <StoreProvider>
       <AuthProvider>
-    <div className="App">
-      <header className="App-header">
-       Hi
-      </header>
-    </div>
+        <RouterProvider router={router} />
     </AuthProvider>
     </StoreProvider>
   );
