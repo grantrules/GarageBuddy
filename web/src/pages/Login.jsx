@@ -22,7 +22,7 @@ function Login() {
   }
     
   return (
-    <div className="Home">
+    <div className="LoginPage">
       <div className="header kirang-haerang-regular">
         <div>
           <h2>
