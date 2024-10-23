@@ -47,4 +47,8 @@ AuthProvider.propTypes = {
   activeSession: PropTypes.bool.isRequired,
 };
 
+AuthProvider.defaultProps = {
+  activeSession: false,
+};
+
 export { AuthContext, AuthProvider };

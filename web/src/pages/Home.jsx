@@ -1,28 +1,18 @@
 import './Home.css';
+import { Navigate } from 'react-router-dom';
+import Authorized from '../auth/Authorized';
 
 function Home() {
-  return (
-    <div className="Home">
-      <div className="header kirang-haerang-regular">
-        <div>
-          <h2>
-       Welcome to GarageBuddy
-       </h2>
-      <img src="/garagebuddy.png" className="App-logo" alt="logo" />
-      </div>
-      </div>
-      <div className="login">
-        <form>
-        <h2>Log in</h2>
 
-          <input type="text" placeholder="Email" />
-          <input type="password" placeholder="Password" />
-          <button>Login</button>
-        </form>
-      </div>
+  return (<div>    <Authorized anonymous={true}>
+      <Navigate to="/login" replace />
 
-    </div>
-  );
+  </Authorized>
+    <Authorized anonymous={false}>
+      Hello
+    </Authorized>
+  </div>
+  )
 }
 
 export default Home;
