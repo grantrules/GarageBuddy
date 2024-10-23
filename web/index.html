@@ -9,6 +9,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kirang+Haerang&display=swap" rel="stylesheet">
 
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <script>
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id: '580923936761-huigcni03k88jsmc95ff4og3m33lrrpu.apps.googleusercontent.com',
+          callback: (...a) => console.log(a)
+        });
+        google.accounts.id.prompt();
+      };
+    </script>
+    
   </head>
   <body>
     <div id="root"></div>

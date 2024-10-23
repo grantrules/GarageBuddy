@@ -17,7 +17,7 @@ function App() {
     <StoreProvider>
       <AuthProvider>
         <RouterProvider router={router} />
-    </AuthProvider>
+      </AuthProvider>
     </StoreProvider>
   );
 }
