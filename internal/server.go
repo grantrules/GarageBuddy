@@ -53,6 +53,8 @@ func StartServer() {
 	e.GET("/oauth2/login/google", CustomContextHandler(OauthGoogleLogin))
 	e.GET("/oauth2/callback/google", CustomContextHandler(OauthGoogleCallback))
 
+	e.GET("/mycars", CustomContextHandler(MyCars))
+
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))
 }

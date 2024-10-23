@@ -22,3 +22,18 @@ type RegisterForm struct {
 type ResetPassForm struct {
 	Email string `json:"email" xml:"email" form:"email" query:"email"`
 }
+
+type Car struct {
+	ID    int
+	Name  string
+	Make  string
+	Model string
+	Year  int
+}
+
+type CarForm struct {
+	Name  string `json:"name" xml:"name" form:"name" query:"name"`
+	Make  string `json:"make" xml:"make" form:"make" query:"make"`
+	Model string `json:"model" xml:"model" form:"model" query:"model"`
+	Year  int    `json:"year" xml:"year" form:"year" query:"year"`
+}

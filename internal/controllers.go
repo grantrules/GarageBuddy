@@ -68,3 +68,22 @@ func ResetPassUser(cc *CustomContext, r ResetPassForm) error {
 
 	return err
 }
+
+func GetCarsByUserId(cc *CustomContext, userId int) ([]Car, error) {
+	rows, err := cc.db.Query("SELECT id,name,make,model,year FROM cars WHERE user_id = $1", userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	cars := []Car{}
+	for rows.Next() {
+		c := Car{}
+		err := rows.Scan(&c.ID, &c.Make, &c.Model, &c.Year)
+		if err != nil {
+			return nil, err
+		}
+		cars = append(cars, c)
+	}
+	return cars, nil
+}

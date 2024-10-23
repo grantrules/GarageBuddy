@@ -149,6 +149,21 @@ func OauthGoogleCallback(c *CustomContext) error {
 
 }
 
+func MyCars(c *CustomContext) error {
+	// get user id from session
+	sess, err := session.Get("session", c)
+	if err != nil {
+		return err
+	}
+	userId := sess.Values["user_id"].(int)
+
+	cars, err := GetCarsByUserId(c, userId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, cars)
+}
+
 type CustomContext struct {
 	echo.Context
 	db *sql.DB
