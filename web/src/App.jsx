@@ -1,11 +1,12 @@
-import './App.css';
+import React from "react";
+import "./App.css";
 
-import { StoreProvider } from './store/StoreContext';
-import { AuthProvider } from './auth/AuthProvider';
+import { StoreProvider } from "./store/StoreContext";
+import { AuthProvider } from "./auth/AuthProvider";
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },

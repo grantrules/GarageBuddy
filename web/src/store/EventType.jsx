@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 /// A single-type event emitter (.on(handler) instead of .on(eventName, handler))
 export default class EventType {
   constructor() {

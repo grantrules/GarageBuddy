@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
-import Store from './Store';
+import React, { useContext } from "react";
+import PropTypes from "prop-types";
+import Store from "./Store";
 
 const StoreContext = React.createContext({});
 
@@ -14,9 +14,7 @@ function StoreProvider({ children }) {
   });
 
   return (
-    <StoreContext.Provider value={store}>
-      {children}
-    </StoreContext.Provider>
+    <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
   );
 }
 

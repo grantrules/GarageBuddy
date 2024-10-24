@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 const AuthContext = React.createContext({
   activeUser: null,
@@ -18,11 +18,11 @@ function AuthProvider({ activeSession, children }) {
     loginFailed: false,
   });
 
-  const loginQuery = async () => {}
-  const logoutQuery = async () => {}
+  const loginQuery = async () => {};
+  const logoutQuery = async () => {};
 
-  const invalidate = async () => logoutQuery({})
-    .then(() => setUserState(LOGGED_OUT));
+  const invalidate = async () =>
+    logoutQuery({}).then(() => setUserState(LOGGED_OUT));
 
   const login = async (details) => {
     const { data, error } = await loginQuery(details);
@@ -39,7 +39,9 @@ function AuthProvider({ activeSession, children }) {
     invalidate,
     loginFailed,
   };
-  return (<AuthContext.Provider value={context}>{children}</AuthContext.Provider>);
+  return (
+    <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
+  );
 }
 
 AuthProvider.propTypes = {

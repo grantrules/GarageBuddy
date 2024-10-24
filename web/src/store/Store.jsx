@@ -1,5 +1,5 @@
-import React from 'react';
-import EventType from './EventType';
+import React from "react";
+import EventType from "./EventType";
 
 class Store {
   constructor() {
@@ -27,13 +27,16 @@ class Store {
     const [, forceUpdate] = React.useReducer((c) => c + 1, 0);
     // eslint-disable-next-line
     const ref = React.useRef(selector(this));
-    this.change.use(() => {
-      const next = selector(this);
-      if (next !== ref.current) {
-        ref.current = next;
-        forceUpdate();
-      }
-    }, deps || [selector]);
+    this.change.use(
+      () => {
+        const next = selector(this);
+        if (next !== ref.current) {
+          ref.current = next;
+          forceUpdate();
+        }
+      },
+      deps || [selector],
+    );
 
     return selector(this);
   }
