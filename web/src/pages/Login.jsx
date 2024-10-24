@@ -93,19 +93,21 @@ function Login() {
         </div>
       </div>
       <div className="login">
-        <h2>{isLogin ? "Log in" : "Sign up"}</h2>
-        <a
-          href="/api/oauth2/login/google"
-          target="_blank"
-          className="button googleButton"
-        >
-          Sign in with Google
-        </a>
-        {isLogin ? (
-          <LoginForm toggleLogin={toggleLogin} />
-        ) : (
-          <RegisterForm toggleLogin={toggleLogin} />
-        )}
+        <div>
+          <h2>{isLogin ? "Log in" : "Sign up"}</h2>
+          <a
+            href="/api/oauth2/login/google"
+            target="_blank"
+            className="button googleButton"
+          >
+            Sign in with Google
+          </a>
+          {isLogin ? (
+            <LoginForm toggleLogin={toggleLogin} />
+          ) : (
+            <RegisterForm toggleLogin={toggleLogin} />
+          )}
+        </div>
       </div>
     </div>
   );
