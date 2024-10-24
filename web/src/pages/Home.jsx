@@ -1,4 +1,3 @@
-import React from "react";
 import "./Home.css";
 import { Navigate } from "react-router-dom";
 import Authorized from "../auth/Authorized";
