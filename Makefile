@@ -12,7 +12,7 @@ fmt:
 vet: fmt
 	go vet ./...
 
-.PHONY:vet
+.PHONY:build
 build: clean vet
 	go build -o output/ ./...
 
