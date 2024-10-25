@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import { AuthContext } from "../auth/AuthProvider";
+
 import "./Login.css";
 
 function RegisterForm({ toggleLogin }) {
@@ -37,19 +39,21 @@ RegisterForm.propTypes = {
 };
 
 function LoginForm({ toggleLogin }) {
+  const { login, loginFailed } = React.useContext(AuthContext);
+
   const [values, setValues] = React.useState({ email: "", password: "" });
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
 
-  const login = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("/api/login", { method: "POST", body: JSON.stringify(values) });
+    login(values);
   };
 
   return (
-    <form onSubmit={login}>
+    <form onSubmit={handleSubmit}>
       <input
         type="text"
         placeholder="Email"
@@ -68,6 +72,7 @@ function LoginForm({ toggleLogin }) {
           New? Sign up!
         </a>
       </div>
+      <div> {loginFailed && `Failed`}</div>
     </form>
   );
 }

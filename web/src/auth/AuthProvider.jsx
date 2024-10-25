@@ -12,13 +12,26 @@ const LOGGED_IN = { activeUser: true, loginFailed: false };
 const LOGGED_OUT = { activeUser: false, loginFailed: false };
 const LOGIN_FAILED = { activeUser: false, loginFailed: true };
 
-function AuthProvider({ activeSession, children }) {
+function AuthProvider({ activeSession = false, children }) {
   const [{ activeUser, loginFailed }, setUserState] = useState({
     activeUser: activeSession,
     loginFailed: false,
   });
 
-  const loginQuery = async () => {};
+  const loginQuery = async (details) => {
+    return fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(details),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        return { data, error: null };
+      })
+      .catch((error) => {
+        return { data: null, error };
+      });
+  };
   const logoutQuery = async () => {};
 
   const invalidate = async () =>
@@ -26,9 +39,11 @@ function AuthProvider({ activeSession, children }) {
 
   const login = async (details) => {
     const { data, error } = await loginQuery(details);
-    if (error || data.login === false) {
+    if (error || !data?.id) {
+      console.log("Login failed");
       setUserState(LOGIN_FAILED);
     } else {
+      console.log("Login success");
       setUserState(LOGGED_IN);
     }
   };
@@ -46,11 +61,7 @@ function AuthProvider({ activeSession, children }) {
 
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
-  activeSession: PropTypes.bool.isRequired,
-};
-
-AuthProvider.defaultProps = {
-  activeSession: false,
+  activeSession: PropTypes.bool,
 };
 
 export { AuthContext, AuthProvider };
