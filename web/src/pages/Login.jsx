@@ -4,25 +4,18 @@ import PropTypes from "prop-types";
 import { AuthContext } from "../auth/AuthProvider";
 
 import "./Login.css";
+import Authorized from "../auth/Authorized";
+import { Navigate } from "react-router-dom";
 
-function RegisterForm({ toggleLogin }) {
-  const [values, setValues] = React.useState({ email: "" });
-
-  const handleChange = (name) => (event) => {
-    setValues({ ...values, [name]: event.target.value });
-  };
-
-  const register = (e) => {
-    e.preventDefault();
-    fetch("/api/register", { method: "POST", body: JSON.stringify(values) });
-  };
+function StepOne({ handleChange, toggleLogin, values }) {
   return (
-    <form onSubmit={register}>
+    <div>
       <input
         type="text"
         placeholder="Email"
         onChange={handleChange("email")}
         value={values.email}
+        autoFocus
       />
       <div className="loginActions">
         <button>Sign Up</button>{" "}
@@ -30,6 +23,142 @@ function RegisterForm({ toggleLogin }) {
           Back to login
         </a>
       </div>
+    </div>
+  );
+}
+
+function StepTwo({ handleChange, toggleLogin, values }) {
+  return (
+    <div>
+      <h2>Step 2</h2>
+      <input
+        type="password"
+        placeholder="Password"
+        name="password"
+        value={values.password}
+        onChange={handleChange("password")}
+        autoFocus
+      />
+      <input
+        type="password"
+        placeholder="Confirm Password"
+        name="password-confirm"
+        values={values["password-confirm"]}
+        onChange={handleChange("password-confirm")}
+      />
+      <button>Next</button>
+    </div>
+  );
+}
+
+function StepThree({ handleChange, toggleLogin, values }) {
+  return (
+    <div>
+      <h2>What should we call you?</h2>
+      <input
+        type="text"
+        placeholder="Your Name"
+        name="firstName"
+        value={values.name}
+        onChange={handleChange("name")}
+        autoFocus
+      />
+      <button>Next</button>
+    </div>
+  );
+}
+
+const stepPropTypes = {
+  handleChange: PropTypes.func.isRequired,
+  toggleLogin: PropTypes.func.isRequired,
+  values: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    "password-confirm": PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
+StepOne.propTypes = stepPropTypes;
+StepTwo.propTypes = stepPropTypes;
+StepThree.propTypes = stepPropTypes;
+
+function Steps({ step, handleChange, toggleLogin, values }) {
+  switch (step) {
+    case 1:
+      return (
+        <StepOne
+          handleChange={handleChange}
+          toggleLogin={toggleLogin}
+          values={values}
+        />
+      );
+    case 2:
+      return (
+        <StepTwo
+          handleChange={handleChange}
+          toggleLogin={toggleLogin}
+          values={values}
+        />
+      );
+    case 3:
+      return (
+        <StepThree
+          handleChange={handleChange}
+          toggleLogin={toggleLogin}
+          values={values}
+        />
+      );
+    default:
+      return null;
+  }
+}
+
+Steps.propTypes = {
+  step: PropTypes.number.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  toggleLogin: PropTypes.func.isRequired,
+  values: PropTypes.object.isRequired,
+};
+
+function RegisterForm({ toggleLogin }) {
+  const [step, setStep] = React.useState(1);
+  const [values, setValues] = React.useState({
+    email: "",
+    password: "",
+    "password-confirm": "",
+    name: "",
+  });
+
+  const handleChange = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.value });
+  };
+
+  const register = () => {
+    return fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (step === 3) {
+      register();
+    } else {
+      setStep(step + 1);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Steps
+        step={step}
+        handleChange={handleChange}
+        toggleLogin={toggleLogin}
+        values={values}
+      />
     </form>
   );
 }
@@ -90,31 +219,36 @@ function Login() {
   };
 
   return (
-    <div className="LoginPage">
-      <div className="header kirang-haerang-regular">
-        <div>
-          <h2>Welcome to GarageBuddy</h2>
-          <img src="/garagebuddy.png" className="App-logo" alt="logo" />
+    <>
+      <Authorized anonymous={false}>
+        <Navigate to="/" replace />
+      </Authorized>
+      <div className="LoginPage">
+        <div className="header kirang-haerang-regular">
+          <div>
+            <h2>Welcome to GarageBuddy</h2>
+            <img src="/garagebuddy.png" className="App-logo" alt="logo" />
+          </div>
+        </div>
+        <div className="login">
+          <div>
+            <h2>{isLogin ? "Log in" : "Sign up"}</h2>
+            <a
+              href="/api/oauth2/login/google"
+              target="_blank"
+              className="button googleButton"
+            >
+              Sign in with Google
+            </a>
+            {isLogin ? (
+              <LoginForm toggleLogin={toggleLogin} />
+            ) : (
+              <RegisterForm toggleLogin={toggleLogin} />
+            )}
+          </div>
         </div>
       </div>
-      <div className="login">
-        <div>
-          <h2>{isLogin ? "Log in" : "Sign up"}</h2>
-          <a
-            href="/api/oauth2/login/google"
-            target="_blank"
-            className="button googleButton"
-          >
-            Sign in with Google
-          </a>
-          {isLogin ? (
-            <LoginForm toggleLogin={toggleLogin} />
-          ) : (
-            <RegisterForm toggleLogin={toggleLogin} />
-          )}
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
 

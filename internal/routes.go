@@ -49,7 +49,7 @@ func Login(c *CustomContext) error {
 		MaxAge:   86400 * 7,
 		HttpOnly: true,
 	}
-	sess.Values["foo"] = "bar"
+	sess.Values["user_id"] = u.ID
 	if err := sess.Save(c.Request(), c.Response()); err != nil {
 		return err
 	}
@@ -71,7 +71,7 @@ func Logout(c *CustomContext) error {
 func Register(c *CustomContext) error {
 	r := new(RegisterForm)
 	if err := c.Bind(r); err != nil {
-		return err
+		return c.JSON(http.StatusNotAcceptable, err)
 	}
 	userId, err := RegisterUser(c, *r)
 	if err != nil {
@@ -150,10 +150,12 @@ func OauthGoogleCallback(c *CustomContext) error {
 }
 
 func MyCars(c *CustomContext) error {
-	// get user id from session
 	sess, err := session.Get("session", c)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusForbidden, err)
+	}
+	if sess.Values["user_id"] == nil {
+		return c.JSON(http.StatusForbidden, "Not logged in")
 	}
 	userId := sess.Values["user_id"].(int)
 

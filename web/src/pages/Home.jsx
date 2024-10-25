@@ -10,6 +10,7 @@ function Home() {
         <Navigate to="/login" replace />
       </Authorized>
       <Authorized>
+        <h1 className="home">SUPPPP</h1>
         <MyCars />
       </Authorized>
     </div>

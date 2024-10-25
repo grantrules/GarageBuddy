@@ -7,14 +7,11 @@ import (
 )
 
 func CreateUser(db *sql.DB, u User) (int64, error) {
-	result, err := db.Exec("INSERT INTO Users (Name, Email, Password) VALUES ($1, $2, $3)", u.Name, u.Email, u.Password)
+	var id int64
+	err := db.QueryRow("INSERT INTO Users (name, email, password) VALUES ($1, $2, $3) RETURNING id", u.Name, u.Email, u.Password).Scan(&id)
 	if err != nil {
 		log.Print(err)
 		return -1, err
-	}
-	id, err := result.LastInsertId()
-	if err != nil {
-		log.Print(err)
 	}
 	return id, err
 }

@@ -39,7 +39,7 @@ function AuthProvider({ activeSession = false, children }) {
 
   const login = async (details) => {
     const { data, error } = await loginQuery(details);
-    if (error || !data?.id) {
+    if (error || !data?.ID) {
       console.log("Login failed");
       setUserState(LOGIN_FAILED);
     } else {
