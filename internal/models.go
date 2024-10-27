@@ -24,11 +24,12 @@ type ResetPassForm struct {
 }
 
 type Car struct {
-	ID    int
-	Name  string
-	Make  string
-	Model string
-	Year  int
+	ID     int
+	UserID int
+	Name   string
+	Make   string
+	Model  string
+	Year   int
 }
 
 type CarForm struct {
@@ -36,4 +37,21 @@ type CarForm struct {
 	Make  string `json:"make" xml:"make" form:"make" query:"make"`
 	Model string `json:"model" xml:"model" form:"model" query:"model"`
 	Year  int    `json:"year" xml:"year" form:"year" query:"year"`
+}
+
+type MaintenanceItem struct {
+	ID              int
+	ServiceRecordID int
+	Item            string
+	Price           float64
+}
+
+type ServiceRecord struct {
+	ID                 int
+	CarID              int
+	ServiceDate        string
+	Mileage            int
+	ServiceType        string
+	ServiceDescription string
+	MaintenanceItems   []MaintenanceItem
 }

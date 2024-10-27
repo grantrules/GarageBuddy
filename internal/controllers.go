@@ -70,20 +70,21 @@ func ResetPassUser(cc *CustomContext, r ResetPassForm) error {
 }
 
 func GetCarsByUserId(cc *CustomContext, userId int) ([]Car, error) {
-	rows, err := cc.db.Query("SELECT id,name,make,model,year FROM cars WHERE user_id = $1", userId)
+
+	cars, err := ListCarsByUserId(cc.db, userId)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-
-	cars := []Car{}
-	for rows.Next() {
-		c := Car{}
-		err := rows.Scan(&c.ID, &c.Make, &c.Model, &c.Year)
-		if err != nil {
-			return nil, err
-		}
-		cars = append(cars, c)
-	}
 	return cars, nil
+}
+
+func CreateCarController(cc *CustomContext, cf CarForm, userId int) (int64, error) {
+	c := new(Car)
+	c.Name = cf.Name
+	c.Make = cf.Make
+	c.Model = cf.Model
+	c.Year = cf.Year
+	c.UserID = userId
+
+	return CreateCar(cc.db, *c)
 }

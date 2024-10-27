@@ -11,7 +11,6 @@ import (
 	"gopkg.in/boj/redistore.v1"
 )
 
-// write a function that returns a new handler that handles CustomContext
 func CustomContextHandler(h func(*CustomContext) error) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		cc := c.(*CustomContext)
@@ -54,6 +53,7 @@ func StartServer() {
 	e.GET("/oauth2/callback/google", CustomContextHandler(OauthGoogleCallback))
 
 	e.GET("/mycars", CustomContextHandler(MyCars))
+	e.GET("/carWithServiceRecords/:id", CustomContextHandler(GetCarWithServiceRecords))
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))

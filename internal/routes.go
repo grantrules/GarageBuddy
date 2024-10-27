@@ -166,6 +166,24 @@ func MyCars(c *CustomContext) error {
 	return c.JSON(http.StatusOK, cars)
 }
 
+func GetCarWithServiceRecords(c *CustomContext) error {
+	sess, err := session.Get("session", c)
+	car_id := c.Context.Param("id")
+	if err != nil {
+		return c.JSON(http.StatusForbidden, err)
+	}
+	if sess.Values["user_id"] == nil {
+		return c.JSON(http.StatusForbidden, "Not logged in")
+	}
+	userId := sess.Values["user_id"].(int)
+
+	car, err := GetCarWithServiceRecord(c.db, car_id, userId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	return c.JSON(http.StatusOK, car)
+}
+
 type CustomContext struct {
 	echo.Context
 	db *sql.DB
