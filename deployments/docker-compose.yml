@@ -40,6 +40,7 @@ services:
     depends_on:
       - redis
       - postgres
+    command: /dlv --listen=:40000 --headless=true --api-version=2 --accept-multiclient exec /app/server
     environment:
       - ENV=production
     restart: unless-stopped
@@ -47,7 +48,7 @@ services:
       - ../.env
     ports:
       - 8080:8080
-    command: /app/server
+      - 40000:40000
     develop:
       watch:
         - action: rebuild
