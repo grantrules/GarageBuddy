@@ -6,6 +6,7 @@ import { AuthContext } from "../auth/AuthProvider";
 import "./Login.css";
 import Authorized from "../auth/Authorized";
 import { Navigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function StepOne({ handleChange, toggleLogin, values }) {
   return (
@@ -18,7 +19,9 @@ function StepOne({ handleChange, toggleLogin, values }) {
         autoFocus
       />
       <div className="loginActions">
-        <button>Sign Up</button>{" "}
+        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+          Sign Up
+        </motion.button>{" "}
         <a href="#" onClick={toggleLogin}>
           Back to login
         </a>
@@ -46,7 +49,9 @@ function StepTwo({ handleChange, toggleLogin, values }) {
         values={values["password-confirm"]}
         onChange={handleChange("password-confirm")}
       />
-      <button>Next</button>
+      <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+        Next
+      </motion.button>
     </div>
   );
 }
@@ -63,7 +68,9 @@ function StepThree({ handleChange, toggleLogin, values }) {
         onChange={handleChange("name")}
         autoFocus
       />
-      <button>Next</button>
+      <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+        Next
+      </motion.button>
     </div>
   );
 }
@@ -196,7 +203,9 @@ function LoginForm({ toggleLogin }) {
         value={values.password}
       />
       <div className="loginActions">
-        <button>Login</button>{" "}
+        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+          Login
+        </motion.button>{" "}
         <a href="#" onClick={toggleLogin}>
           New? Sign up!
         </a>
@@ -227,19 +236,23 @@ function Login() {
         <div className="header kirang-haerang-regular">
           <div>
             <h2>Welcome to GarageBuddy</h2>
-            <img src="/garagebuddy.png" className="App-logo" alt="logo" />
+            <motion.div whileHover={{ scale: 1.1 }}>
+              <img src="/garagebuddy.png" className="App-logo" alt="logo" />
+            </motion.div>
           </div>
         </div>
         <div className="login">
           <div>
             <h2>{isLogin ? "Log in" : "Sign up"}</h2>
-            <a
-              href="/api/oauth2/login/google"
-              target="_blank"
-              className="button googleButton"
-            >
-              Sign in with Google
-            </a>
+            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              <a
+                href="/api/oauth2/login/google"
+                target="_blank"
+                className="button googleButton"
+              >
+                Sign in with Google
+              </a>
+            </motion.div>
             {isLogin ? (
               <LoginForm toggleLogin={toggleLogin} />
             ) : (
